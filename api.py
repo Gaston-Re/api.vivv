@@ -1,14 +1,20 @@
 from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy import create_engine, text
 import pandas as pd
-import configparser
+import os
 
-# Cargar configuración desde config.ini
-config = configparser.ConfigParser()
-config.read('config.ini')
+# Obtener configuraciones de entorno
+DATABASE_URL = os.getenv('DATABASE_URL')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
 
-# Configuración de la conexión a la base de datos PostgreSQL
-DATABASE_URL = f"postgresql+psycopg2://{config['database']['user']}:{config['database']['password']}@{config['database']['host']}:{config['database']['port']}/{config['database']['database']}"
+# Verificar que todas las variables necesarias están definidas
+if not all([DATABASE_URL, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT]):
+    raise ValueError("Faltan variables de entorno necesarias para la conexión a la base de datos")
+
+# Configurar la conexión a la base de datos PostgreSQL
 engine = create_engine(DATABASE_URL)
 
 app = FastAPI()
