@@ -3,23 +3,19 @@ from sqlalchemy import create_engine, text
 import pandas as pd
 import os
 
-# Obtener configuraciones de entorno
 DATABASE_URL = os.getenv('DATABASE_URL')
 DB_USER = os.getenv('DB_USER')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_HOST = os.getenv('DB_HOST')
 DB_PORT = os.getenv('DB_PORT')
 
-# Verificar que todas las variables necesarias están definidas
 if not all([DATABASE_URL, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT]):
     raise ValueError("Faltan variables de entorno necesarias para la conexión a la base de datos")
 
-# Configurar la conexión a la base de datos PostgreSQL
 engine = create_engine(DATABASE_URL)
 
 app = FastAPI()
 
-# Endpoint para obtener los nombres de los productos, sus precios unitarios y regiones
 @app.get("/productos")
 def obtener_productos():
     try:
